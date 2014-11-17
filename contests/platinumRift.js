@@ -81,15 +81,16 @@ while (true) {
         for(var j = 0; j < linksCount; ++j) {
             var destId = listLinks[zonesInfo[i].id][j];
             if(zonesInfo[destId].owner != myId) {
-                //TODO: Improve prioritization by resources.
-                emptyLinks.push(destId);
+                emptyLinks.push({id: destId, plat: zonesPlat[destId]});
             }
         }
+        //TODO: Improve prioritization by defense
+        emptyLinks.sort(function(a, b) { return (a.plat > b.plat); });
         while(zonesInfo[i].pods[myId] >  0) {
             var destMove;
             if(emptyLinks.length > 0) {
                 //move to an empty position.
-                destMove = emptyLinks.pop();
+                destMove = emptyLinks.pop().id;
             } else {
                 //move it anywhere :p.
                 destMove = listLinks[zonesInfo[i].id][Math.floor(Math.random() * listLinks[zonesInfo[i].id].length)];
