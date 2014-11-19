@@ -61,7 +61,7 @@ while (true) {
 
     for (var i = 0; i < zonesInfo.length; i++) {
         if(amount > 0 && zonesInfo[i].owner == -1
-           && (zonesPlat[zonesInfo[i].id] > 3 || Math.random() > 0.99 - i/1000)) {
+           && zonesInfo[i].id >= 50 && (zonesPlat[zonesInfo[i].id] > 3 || Math.random() > 0.99 - i/1000)) {
             out = (out === 'WAIT')?'1 ' + zonesInfo[i].id:out + ' 1 ' + zonesInfo[i].id;
             amount--;
         }
@@ -93,6 +93,7 @@ while (true) {
                 destMove = emptyLinks.pop().id;
             } else {
                 //move it anywhere :p.
+                // TODO!! If there is nothing to in range do not move anymore. 
                 destMove = listLinks[zonesInfo[i].id][Math.floor(Math.random() * listLinks[zonesInfo[i].id].length)];
             }
             var moveStr = '1 ' + zonesInfo[i].id + ' ' + destMove;
