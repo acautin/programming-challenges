@@ -11,12 +11,14 @@ var linkCount = parseInt(inputs[3]); // the amount of links between all zones
 var zonesPlat = [];
 var listLinks = [];
 var firstTurn = false; // TODO: Disable this or improve for a sensible one.
+
 for (var i = 0; i < zoneCount; i++) {
     var inputs = readline().split(' ');
     var zoneId = parseInt(inputs[0]); // this zone's ID (between 0 and zoneCount-1)
     var platinumSource = parseInt(inputs[1]); // the amount of Platinum this zone can provide per game turn
     zonesPlat[zoneId] = platinumSource;
 }
+
 for (var i = 0; i < linkCount; i++) {
     var inputs = readline().split(' ');
     var zone1 = parseInt(inputs[0]);
@@ -40,7 +42,6 @@ while (true) {
     printErr('The amount: ' + amount);
     var out = 'WAIT';
     var move = 'WAIT';
-    var myZone = {id: 0, plat: -1};
     var zonesInfo = [];
     for(var i = 0; i < zoneCount; ++i) {
         var inputs = readline().split(' ');
@@ -59,14 +60,14 @@ while (true) {
         zonesInfo.push(zoneInfo);
     }
 
+    var myZone = {id: 0, plat: -1};
     for (var i = 0; i < zonesInfo.length; i++) {
-        if(amount > 0 && zonesInfo[i].owner == -1
-           && zonesInfo[i].id >= 50 && (zonesPlat[zonesInfo[i].id] > 3 || Math.random() > 0.99 - i/1000)) {
-            out = (out === 'WAIT')?'1 ' + zonesInfo[i].id:out + ' 1 ' + zonesInfo[i].id;
-            amount--;
-        }
-
-        if(zonesInfo[i].owner == myId) {
+        if(zonesInfo[i].owner == -1) {
+            if(amount > 0 && (zonesPlat[zonesInfo[i].id] > 3 || Math.random() > 0.99 - i/1000)) {
+                out = (out === 'WAIT')?'1 ' + zonesInfo[i].id:out + ' 1 ' + zonesInfo[i].id;
+                amount--;
+            }
+        } else if (zonesInfo[i].owner == myId) {
             if(myZone.plat == -1) { // First owned zone.
                 myZone = {id: zonesInfo[i].id, plat: zonesPlat[zonesInfo[i].id], pods: zonesInfo[i].pods[myId]};
             } else if(zonesInfo[i].pods[myId] < myZone.pods) {
@@ -74,31 +75,31 @@ while (true) {
             } else if(zonesInfo[i].pods[myId] == myZone.pods && zonesPlat[zonesInfo[i].id] > myZone.plat) {
                 myZone = {id: zonesInfo[i].id, plat: zonesPlat[zonesInfo[i].id], pods: zonesInfo[i].pods[myId]};
             }
-        }
-        //Search for empty links.
-        var linksCount = listLinks[zonesInfo[i].id].length;
-        var emptyLinks = [];
-        for(var j = 0; j < linksCount; ++j) {
-            var destId = listLinks[zonesInfo[i].id][j];
-            if(zonesInfo[destId].owner != myId) {
-                emptyLinks.push({id: destId, plat: zonesPlat[destId]});
+            //Search for empty links.
+            var linksCount = listLinks[zonesInfo[i].id].length;
+            var emptyLinks = [];
+            for(var j = 0; j < linksCount; ++j) {
+                var destId = listLinks[zonesInfo[i].id][j];
+                if(zonesInfo[destId].owner != myId) {
+                    emptyLinks.push({id: destId, plat: zonesPlat[destId]});
+                }
             }
-        }
-        //TODO: Improve prioritization by defense
-        emptyLinks.sort(function(a, b) { return (a.plat > b.plat); });
-        while(zonesInfo[i].pods[myId] >  0) {
-            var destMove;
-            if(emptyLinks.length > 0) {
-                //move to an empty position.
-                destMove = emptyLinks.pop().id;
-            } else {
-                //move it anywhere :p.
-                // TODO!! If there is nothing to in range do not move anymore. 
-                destMove = listLinks[zonesInfo[i].id][Math.floor(Math.random() * listLinks[zonesInfo[i].id].length)];
+            //TODO: Improve prioritization by defense
+            emptyLinks.sort(function(a, b) { return (a.plat > b.plat); });
+            while(zonesInfo[i].pods[myId] >  0) {
+                var destMove;
+                if(emptyLinks.length > 0) {
+                    //move to an empty position.
+                    destMove = emptyLinks.pop().id;
+                } else {
+                    //move it anywhere :p.
+                    // TODO!! If there is nothing to in range do not move anymore. 
+                    destMove = listLinks[zonesInfo[i].id][Math.floor(Math.random() * listLinks[zonesInfo[i].id].length)];
+                }
+                var moveStr = '1 ' + zonesInfo[i].id + ' ' + destMove;
+                move = (move === 'WAIT')?moveStr:move + ' ' + moveStr;
+                zonesInfo[i].pods[myId]--;
             }
-            var moveStr = '1 ' + zonesInfo[i].id + ' ' + destMove;
-            move = (move === 'WAIT')?moveStr:move + ' ' + moveStr;
-            zonesInfo[i].pods[myId]--;
         }
     }
     //Reinforcements go to most profitable zone. // maybe in a list not all to the same place.
