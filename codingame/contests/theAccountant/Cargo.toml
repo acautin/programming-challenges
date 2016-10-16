@@ -1,0 +1,6 @@
+[package]
+name = "the_accountant"
+version = "0.1.0"
+authors = ["Agustin Cautin <acautin@gmail.com>"]
+
+[dependencies]
