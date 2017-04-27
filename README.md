@@ -1,3 +1,3 @@
 # programming-challenges
 
-Repository to have a backup of my attempts to solve programming challenges of hackerrank and codingame.
+Solutions to hackerrank and codingame challenges as a way to learn and practice new programming languages.
