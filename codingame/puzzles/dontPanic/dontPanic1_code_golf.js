@@ -1,0 +1,1 @@
+p=[];r=()=>{u=readline().split(' ');u.forEach((e,i)=>p[i]=parseInt(e));};r();e=[];for(i=0;i<p[7];i++){r();e[p[0]]=p[1];}f=0;while(1){r();c="WAIT";if(p[0]==f){t=(p[3]==f)?p[4]:e[f];if((u[2]>"R"&&p[1]>t)||(u[2]<"M"&&p[1]<t)){c="BLOCK";}f++;}print(c);}
