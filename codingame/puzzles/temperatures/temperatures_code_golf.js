@@ -1,0 +1,1 @@
+a=Math.abs;r=readline;r();t=r().split(' ');r=t[0];for(i=1;i<t.length;++i){if(a(t[i])<a(r)||(a(t[i])==a(r)&&t[i]>r)){r=t[i];}}print(r?r:0);

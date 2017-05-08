@@ -1,0 +1,1 @@
+r=readline;i=r().split(' ');for(Y=i[1]-i[3],X=i[0]-i[2];r();print(S)){S="";if(Y>0)S+="S",Y--;if(Y<0)S+="N",Y++;if(X>0)S+="E",X--;if(X<0)S+="W",X++;}
