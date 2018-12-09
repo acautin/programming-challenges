@@ -62,7 +62,7 @@ Both players take it in turns to perform one action with one of their units. To 
 
 - [Rust implementation](codingame/contests/wondevWoman/main.rs)
 
-## Puzzless
+## Puzzles
 
 Single player bot programming with predefined tasks (Ordered by difficulty)
 
